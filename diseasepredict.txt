@@ -1,0 +1,61 @@
+import pandas as pd
+import joblib
+import gspread
+from google.oauth2.service_account import Credentials
+
+# 1. Load the trained model and LabelEncoder
+model_filename = 'disease_prediction_model.joblib'
+loaded_model = joblib.load(model_filename)
+label_encoder_filename = 'rain_status_encoder.joblib'
+loaded_le = joblib.load(label_encoder_filename)
+
+# 2. Define the scope for Google Sheets API
+SCOPE = [
+    'https://www.googleapis.com/auth/spreadsheets',
+    'https://www.googleapis.com/auth/drive.file',
+    'https://www.googleapis.com/auth/drive'
+]
+
+# 3. Load your Google Sheets credentials (replace 'your_credentials.json' with your actual filename)
+CREDS = Credentials.from_service_account_file('your_credentials.json', scopes=SCOPE)
+gc = gspread.authorize(CREDS)
+
+# 4. Open the Google Sheet where your new data is (replace 'Your Sheet Name' with the actual name)
+spreadsheet_name = 'Your Sheet Name'
+sh = gc.open(spreadsheet_name)
+
+# 5. Select the worksheet containing the new data (replace 'Sheet1' if needed)
+worksheet_name = 'Sheet1'
+worksheet = sh.worksheet(worksheet_name)
+
+# 6. Get the new data
+new_data_list = worksheet.get_all_values()
+if not new_data_list or not new_data_list[0]:
+    print("No data found in the Google Sheet.")
+    exit()
+headers = new_data_list[0]
+new_data_values = new_data_list[1:]
+new_df = pd.DataFrame(new_data_values, columns=headers)
+
+# 7. Preprocess the new data
+X_new = new_df[['humidity', 'motionDetected', 'npkValue', 'rainStatus',
+                 'soilMoisture30', 'soilMoisture60', 'temperature', 'windSpeed']]
+X_new['rainStatus'] = loaded_le.transform(X_new['rainStatus'])
+
+# 8. Make predictions
+predictions = loaded_model.predict(X_new)
+
+# 9. Add predictions to the data
+predictions_with_header = ['Predicted Disease'] + list(predictions)
+
+# 10. Upload the predictions to the Google Sheet (adding a new column)
+try:
+    # Find the next available column
+    num_cols = worksheet.col_count
+    next_col = chr(ord('A') + num_cols)
+    cell_range = f'{next_col}1:{next_col}{len(predictions_with_header)}'
+    predictions_list_of_lists = [[pred] for pred in predictions_with_header]
+    worksheet.update(cell_range, predictions_list_of_lists)
+    print(f"Predictions uploaded to '{spreadsheet_name}' in column {next_col}!")
+except Exception as e:
+    print(f"An error occurred while uploading to Google Sheets: {e}")

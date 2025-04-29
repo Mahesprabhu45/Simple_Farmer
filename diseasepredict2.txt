@@ -1,0 +1,53 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.preprocessing import LabelEncoder
+
+# 1. Load your data
+data = pd.read_csv('your_sample_data2.csv')  # ENSURE THIS MATCHES YOUR CSV FILENAME
+
+# 2. Separate features (sensor data) and target (disease label)
+X = data[['humidity', 'motionDetected', 'npkValue', 'rainStatus',
+          'soilMoisture30', 'soilMoisture60', 'temperature', 'windSpeed']]
+y = data['Disease Label']
+
+# 3. Handle categorical 'rainStatus' using Label Encoding
+le = LabelEncoder()
+X['rainStatus'] = le.fit_transform(X['rainStatus'])
+# Note: For more complex categorical features, one-hot encoding might be better
+
+# 4. Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# 5. Train a simple model (Logistic Regression)
+model = LogisticRegression(random_state=42, solver='liblinear', multi_class='auto')
+model.fit(X_train, y_train)
+
+# 6. Make predictions on the test set
+y_pred = model.predict(X_test)
+
+# 7. Evaluate the model
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy: {accuracy:.2f}")
+
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
+
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
+
+# 8. (Optional) Try predicting on a new data point
+new_data = pd.DataFrame({
+    'humidity': [70],
+    'motionDetected': [0],
+    'npkValue': [115],
+    'rainStatus': ['Yes'], # Enter the categorical value
+    'soilMoisture30': [65],
+    'soilMoisture60': [75],
+    'temperature': [27],
+    'windSpeed': [6]
+})
+new_data['rainStatus'] = le.transform(new_data['rainStatus']) # Encode the new data
+predicted_disease = model.predict(new_data)[0]
+print(f"\nPredicted disease for new data: {predicted_disease}")
