@@ -1,0 +1,10 @@
+{
+  "humidity": 55,
+  "motionDetected": 1,
+  "npkValue": 140,
+  "rainStatus": "No",
+  "soilMoisture30": 50,
+  "soilMoisture60": 60,
+  "temperature": 25,
+  "windSpeed": 3
+}

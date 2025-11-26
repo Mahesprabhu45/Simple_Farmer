@@ -1,0 +1,17 @@
+| Sl. No | Component Name                           | Quantity | Specification                               | Purpose / Notes                                             |
+| ------ | ---------------------------------------- | -------- | ------------------------------------------- | ----------------------------------------------------------- |
+| 1      | **ESP32 Development Board**              | 1        | Wi-Fi + BLE enabled                         | Main controller to read sensors and communicate with server |
+| 2      | **Capacitive Soil Moisture Sensor**      | 1–2      | Analog output                               | Measures soil moisture level for automated irrigation       |
+| 3      | **DHT22 / BME280 Sensor**                | 1        | Temp + Humidity                             | Monitors farm environmental conditions                      |
+| 4      | **PIR Motion Sensor**                    | 1        | Digital                                     | Detects animal/bird intrusion near the crop                 |
+| 5      | **Rain Sensor Module**                   | 1        | Analog + Digital                            | Detects rainfall and modifies irrigation logic              |
+| 6      | **Relay Module (Single Channel)**        | 1        | 5V optocoupler (recommended)                | Controls water pump from ESP32 safely                       |
+| 7      | **Water Pump (DC / AC depending model)** | 1        | 5–12V DC pump recommended                   | Used for irrigation automation                              |
+| 8      | **Power Supply Adapter**                 | 1        | 5V / 2A or as required                      | To power ESP32 + sensors                                    |
+| 9      | **Pump Power Supply**                    | 1        | 5–12V depending pump                        | Separate power source for relay + pump                      |
+| 10     | **Jumper Wires (M–M, M–F)**              | 1 Set    | –                                           | Wiring between ESP32 and sensors                            |
+| 11     | **Breadboard**                           | 1        | Full/half size                              | Prototype sensor connections                                |
+| 12     | **Tubing/Pipe**                          | 1        | Optional                                    | Connects pump → soil for irrigation demo                    |
+| 13     | **LoRa SX1278 Module (Optional)**        | 1        | Long-range wireless                         | For remote farms without Wi-Fi                              |
+| 14     | **Waterproof Enclosure / Box**           | 1        | Optional                                    | Protects hardware outdoors                                  |
+| 15     | **USB Cable (ESP32 programming cable)**  | 1        | USB-A to MicroUSB/Type-C (depends on board) | Used to program and power ESP32                             |

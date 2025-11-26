@@ -1,0 +1,17 @@
+
+## Endpoint:
+
+POST → `/predict`
+
+### Example JSON body:
+
+{
+  "humidity": 60,
+  "motionDetected": 0,
+  "npkValue": 120,
+  "rainStatus": "Yes",
+  "soilMoisture30": 68,
+  "soilMoisture60": 75,
+  "temperature": 27,
+  "windSpeed": 5
+}
